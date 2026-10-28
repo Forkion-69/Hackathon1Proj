@@ -1,0 +1,29 @@
+flowchart TD
+    S(["step(session, digit)"]) --> N1{"Current menu is language?"}
+    N1 -->|"yes"| L1{"Digit is 1, 2 or 3?"}
+    L1 -->|"yes"| L2["Save language, go to main menu"]
+    L1 -->|"no"| OUT["Return: answer if any + current menu prompt"]
+    N1 -->|"no"| Z1{"Digit is 0?"}
+    Z1 -->|"yes"| Z2["Back: main goes to language menu,<br/>other menus go to main"]
+    Z1 -->|"no"| Q1{"Digit is 9 or empty?"}
+    Q1 -->|"yes"| OUT
+    Q1 -->|"no"| M1{"Which menu?"}
+    M1 -->|"main"| MA{"Digit is 1, 2 or 3?"}
+    MA -->|"yes"| MB["Go to prices, schemes or wellbeing menu"]
+    MA -->|"no"| INV["Say: invalid option"]
+    M1 -->|"prices"| P1{"Digit is 1 to 4?"}
+    P1 -->|"yes"| P2["Say today's prices for that crop"]
+    P1 -->|"no"| INV
+    M1 -->|"schemes"| C1{"Digit is 1 to 4?"}
+    C1 -->|"yes"| C2["Say that scheme's summary"]
+    C1 -->|"no"| INV
+    M1 -->|"wellbeing"| W1{"Digit is 1 or 2?"}
+    W1 -->|"yes"| W2["Say helpline or calming message"]
+    W1 -->|"no"| INV
+    L2 --> OUT
+    Z2 --> OUT
+    MB --> OUT
+    P2 --> OUT
+    C2 --> OUT
+    W2 --> OUT
+    INV --> OUT

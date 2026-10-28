@@ -1,0 +1,18 @@
+flowchart TD
+    A(["Farmer's phone"]) -->|"call"| B["Twilio"]
+    B -->|"POST /voice"| C["FastAPI creates session<br/>lang = none, node = lang"]
+    C --> D["prompt(): build spoken text"]
+    D --> E["twiml(): Play audio + Gather 1 digit"]
+    E --> F["Twilio fetches audio from /tts"]
+    F --> G{"MP3 already cached?"}
+    G -->|"no"| H["gTTS generates MP3 and saves it"]
+    G -->|"yes"| I["Serve cached MP3"]
+    H --> I
+    I --> J["Caller hears the menu"]
+    J --> K{"Key pressed within 7 s?"}
+    K -->|"yes"| L["Twilio: POST /voice/step with Digits"]
+    K -->|"no"| M["Redirect to /voice/step, no digit"]
+    L --> N["step(session, digit)"]
+    M --> N
+    N --> O["Answer + next menu"]
+    O --> E
