@@ -1,0 +1,37 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kisan Voice simulator</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--card:#f2f4ef;--accent:#2e7d32;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#161a16;--fg:#eee;--card:#232a23;--accent:#66bb6a}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;display:grid;place-items:center;min-height:100vh}
+.phone{width:min(340px,92vw);padding:20px}
+h1{font-size:18px;margin:0 0 12px}
+#screen{background:var(--card);border-radius:12px;padding:12px;min-height:110px;font-size:15px;line-height:1.5;margin-bottom:14px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+button{font-size:22px;padding:14px;border:0;border-radius:12px;background:var(--card);color:var(--fg);cursor:pointer}
+button:active{transform:scale(.96)}
+#call{grid-column:1/4;background:var(--accent);color:#fff;font-size:18px}
+</style></head><body><div class="phone">
+<h1>📞 Kisan Voice — phone simulator</h1>
+<div id="screen">Press Call to start.</div>
+<div class="pad">
+<button id="call" onclick="call()">Call</button>
+<button onclick="send('1')">1</button><button onclick="send('2')">2</button><button onclick="send('3')">3</button>
+<button onclick="send('4')">4</button><button onclick="send('5')">5</button><button onclick="send('6')">6</button>
+<button onclick="send('7')">7</button><button onclick="send('8')">8</button><button onclick="send('9')">9</button>
+<button onclick="send('*')">*</button><button onclick="send('0')">0</button><button onclick="send('#')">#</button>
+</div></div>
+<script>
+let sid=null,queue=[];const audio=new Audio();
+function next(){if(queue.length){audio.src=queue.shift();audio.play();}}
+audio.onended=next;
+async function send(d){
+  if(!sid)return;audio.pause();queue=[];
+  const r=await fetch('/sim/step',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sid,digit:d})});
+  const segs=await r.json();
+  document.getElementById('screen').textContent=segs.map(s=>s.text).join(' ');
+  queue=segs.map(s=>s.audio);next();
+}
+function call(){sid='sim-'+Date.now();send('');}
+</script></body></html>
