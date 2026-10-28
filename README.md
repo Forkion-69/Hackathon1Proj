@@ -134,7 +134,7 @@ Edit `data.py` to change spoken text, crops, mandis, prices or schemes. Edit `st
 
 ## Author
 
-_Your name_ · _LinkedIn link_
+Forkion-69 · _https://www.linkedin.com/in/kartik-tambe-234b2a442/_
 
 ## License
 
